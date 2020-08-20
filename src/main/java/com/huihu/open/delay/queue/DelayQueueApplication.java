@@ -20,14 +20,13 @@ public class DelayQueueApplication {
         EventLoopGroup work = new NioEventLoopGroup(2);
 
         ServerBootstrap bootstrap = serverBootstrap.group(boss, work);
-        bootstrap.channel(NioServerSocketChannel.class)
-                .childOption(NioChannelOption.TCP_NODELAY,true)
-                .childHandler(new ChannelInitializer<SocketChannel>() {
-                    @Override
-                    protected void initChannel(SocketChannel socketChannel) throws Exception {
-                        socketChannel.pipeline().addLast();
-                    }
-                });
+        bootstrap.channel(NioServerSocketChannel.class).childOption(NioChannelOption.TCP_NODELAY, true)
+            .childHandler(new ChannelInitializer<SocketChannel>() {
+                @Override
+                protected void initChannel(SocketChannel socketChannel) throws Exception {
+                    socketChannel.pipeline().addLast();
+                }
+            });
         bootstrap.bind(8081);
     }
 

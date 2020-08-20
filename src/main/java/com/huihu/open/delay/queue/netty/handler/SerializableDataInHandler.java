@@ -24,16 +24,20 @@ public class SerializableDataInHandler extends ChannelInboundHandlerAdapter {
         //Hessian的反序列化读取对象
         HessianInput hi = new HessianInput(is);
         InvokeHandlerDto invokeHandlerDto = (InvokeHandlerDto) hi.readObject();
+
+        //
         Class aClass = invokeHandlerDto.getAClass();
         Class<?> clz = Class.forName(aClass.getName());
         Object instance = clz.newInstance();
         Class<?>[] paramClss = new Class<?>[invokeHandlerDto.getParams().length];
+
+        //
         int i = 0;
         for (Object param : invokeHandlerDto.getParams()) {
             paramClss[i++] = param.getClass();
         }
         Method method = clz.getMethod(invokeHandlerDto.getMethodName(), paramClss);
         Object response = method.invoke(instance, invokeHandlerDto.getParams());
-
+        ctx.writeAndFlush(response);
     }
 }
